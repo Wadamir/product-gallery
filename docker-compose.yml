@@ -1,0 +1,11 @@
+services:
+  php-apache:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+    container_name: product_gallery_app
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    restart: unless-stopped
