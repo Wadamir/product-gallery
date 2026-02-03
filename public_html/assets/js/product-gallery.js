@@ -150,6 +150,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		},
 		on: {
 			init(swiper) {
+				toggleMainArrows(swiper);
+				handleVideo(swiper);
 				debugSwiperUpdate({
 					event: "init",
 					allowTouchMove: swiper.allowTouchMove,
@@ -185,6 +187,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			},
 
 			slideChange(swiper) {
+				handleVideo(swiper);
 				debugSwiperUpdate({
 					event: "slideChange",
 					slide: swiper.activeIndex,
@@ -255,26 +258,33 @@ document.addEventListener("DOMContentLoaded", () => {
 	}
 
 	function handleVideo(swiper) {
-		console.log("handleVideo called");
-		const slide = swiper.slides[0];
+		const slide = swiper.slides[swiper.activeIndex];
 		if (!slide || !slide.classList.contains("is-video")) return;
 
 		const video = slide.querySelector("video");
 		const wrapper = slide.querySelector(".video-wrapper");
 		if (!video || !wrapper) return;
 
-		if (swiper.activeIndex === 0) {
-			if (!userPausedVideo) {
-				video
-					.play()
-					.then(() => {
-						wrapper.classList.remove("is-paused");
-						wrapper.classList.add("is-loaded");
-					})
-					.catch(() => {});
-			}
+		// If video is already marked as loaded, do nothing
+		if (wrapper.classList.contains("is-loaded")) return;
+
+		console.log("handle video");
+
+		const markLoaded = () => {
+			console.log("video loaded");
+			wrapper.classList.add("is-loaded");
+			wrapper.classList.remove("is-paused");
+		};
+
+		// If video frame is already available, mark as loaded immediately
+		if (video.readyState >= 2) {
+			markLoaded();
 		} else {
-			video.pause();
+			video.addEventListener("loadeddata", markLoaded, { once: true });
+		}
+
+		if (!userPausedVideo) {
+			video.play().catch(() => {});
 		}
 	}
 
@@ -424,16 +434,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		mainSwiper.allowTouchMove = scale === 1;
 	}
 
-	function enableDoubleTapClose(target) {
-		target.addEventListener("click", (e) => {
-			const now = Date.now();
-			if (now - lastTap < 300 && scale > 1) {
-				resetZoom(target);
-				closeFullscreen();
-			}
-			lastTap = now;
-		});
-	}
+	// function enableDoubleTapClose(target) {
+	// 	target.addEventListener("click", (e) => {
+	// 		const now = Date.now();
+	// 		if (now - lastTap < 300 && scale > 1) {
+	// 			resetZoom(target);
+	// 			closeFullscreen();
+	// 		}
+	// 		lastTap = now;
+	// 	});
+	// }
 
 	function resetZoom(target) {
 		scale = 1;
