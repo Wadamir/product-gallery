@@ -75,6 +75,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	let startDist = null;
 	let lastTap = 0;
+
+	let lastTapTime = 0;
+	let didPinch = false;
 	/* pinch to zoom support end */
 
 	const thumbsSwiper = new Swiper(".thumbs-swiper", {
@@ -252,13 +255,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function onPointerDown(e) {
 		pointers.set(e.pointerId, e);
-		/* debug gesture events */
+
+		const now = Date.now();
+
+		// double tap detection
+		if (
+			pointers.size === 1 &&
+			now - lastTapTime < 300 &&
+			scale > 1 &&
+			!didPinch
+		) {
+			debugUpdate({
+				event: "double-tap",
+				last: "reset zoom",
+			});
+
+			resetZoom(e.target);
+			lastTapTime = 0;
+			return;
+		}
+
+		lastTapTime = now;
+		didPinch = false;
+
 		debugUpdate({
 			event: "pointerdown",
 			pointers: pointers.size,
-			last: `id=${e.pointerId}`,
 		});
-		/* end debug gesture events */
 	}
 
 	function onPointerMove(e) {
@@ -267,6 +290,8 @@ document.addEventListener("DOMContentLoaded", () => {
 		pointers.set(e.pointerId, e);
 
 		if (pointers.size === 2) {
+			didPinch = true;
+
 			const [p1, p2] = Array.from(pointers.values());
 			const dist = getDistance(p1, p2);
 
@@ -276,29 +301,26 @@ document.addEventListener("DOMContentLoaded", () => {
 			applyScale(e.target);
 		}
 
-		/* debug gesture events */
 		debugUpdate({
 			event: "pointermove",
 			pointers: pointers.size,
 			scale,
 		});
-		/* end debug gesture events */
 	}
 
 	function onPointerUp(e) {
 		pointers.delete(e.pointerId);
+
 		if (pointers.size < 2) {
 			startDist = null;
 			startScale = scale;
 			isZoomed = scale > 1;
 		}
 
-		/* debug gesture events */
 		debugUpdate({
 			event: "pointerup",
 			pointers: pointers.size,
 		});
-		/* end debug gesture events */
 	}
 
 	function getDistance(p1, p2) {
@@ -332,6 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		startScale = 1;
 		startDist = null;
 		isZoomed = false;
+		didPinch = false;
 
 		target.style.transform = "scale(1)";
 		mainSwiper.allowTouchMove = true;
