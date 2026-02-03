@@ -658,6 +658,11 @@ body.no-scroll {
 	max-width: 100%;
     height: auto;
 	max-height: 100%;
+
+    /* pinch to zoom support start */
+    touch-action: none;
+    overflow: hidden;
+    /* pinch to zoom support end */
 }
 
 .product-gallery-wrapper.is-fullscreen img,
@@ -669,6 +674,12 @@ body.no-scroll {
 	max-width: 100vw;
 
 	object-fit: contain;
+
+    /* pinch to zoom support start */
+    transform-origin: center center;
+	transition: transform 0.25s ease;
+	will-change: transform;
+    /* pinch to zoom support end */
 }
 
 /*** Thumbnails in fullscreen ***/

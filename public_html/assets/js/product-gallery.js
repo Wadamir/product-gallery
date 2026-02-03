@@ -8,6 +8,16 @@ document.addEventListener("DOMContentLoaded", () => {
 		closeBtn.addEventListener("click", closeFullscreen);
 	}
 
+	/* pinch to zoom support start */
+	let scale = 1;
+	let startScale = 1;
+	let pointers = new Map();
+	let isZoomed = false;
+
+	let startDist = null;
+	let lastTap = 0;
+	/* pinch to zoom support end */
+
 	const thumbsSwiper = new Swiper(".thumbs-swiper", {
 		slidesPerView: "auto",
 		spaceBetween: 12,
@@ -119,11 +129,23 @@ document.addEventListener("DOMContentLoaded", () => {
 		// iOs fix for Swiper not updating correctly
 		requestAnimationFrame(() => {
 			mainSwiper.update();
+
+			/* pinch to zoom support start */
+			requestAnimationFrame(() => {
+				const activeSlide = document.querySelector(
+					".swiper-slide-active img, .swiper-slide-active video",
+				);
+
+				if (activeSlide) {
+					enablePinchZoom(activeSlide);
+					enableDoubleTapClose(activeSlide);
+				}
+			});
+			/* pinch to zoom support end */
+
 			mainSwiper.updateSlides();
 			mainSwiper.updateSize();
 		});
-
-		// mainSwiper.update();
 	}
 
 	function closeFullscreen() {
@@ -136,6 +158,79 @@ document.addEventListener("DOMContentLoaded", () => {
 			.classList.remove("is-fullscreen");
 
 		mainSwiper.update();
+	}
+
+	/* pinch to zoom support start */
+	function enablePinchZoom(target) {
+		target.addEventListener("pointerdown", onPointerDown);
+		target.addEventListener("pointermove", onPointerMove);
+		target.addEventListener("pointerup", onPointerUp);
+		target.addEventListener("pointercancel", onPointerUp);
+	}
+
+	function onPointerDown(e) {
+		pointers.set(e.pointerId, e);
+	}
+
+	function onPointerMove(e) {
+		if (!pointers.has(e.pointerId)) return;
+
+		pointers.set(e.pointerId, e);
+
+		if (pointers.size === 2) {
+			const [p1, p2] = Array.from(pointers.values());
+			const dist = getDistance(p1, p2);
+
+			if (!startScale) startScale = scale;
+			scale = Math.min(Math.max(startScale * (dist / startDist), 1), 4);
+
+			applyScale(e.target);
+		}
+	}
+
+	function onPointerUp(e) {
+		pointers.delete(e.pointerId);
+		if (pointers.size < 2) {
+			startDist = null;
+			startScale = scale;
+			isZoomed = scale > 1;
+		}
+	}
+
+	function getDistance(p1, p2) {
+		const dx = p1.clientX - p2.clientX;
+		const dy = p1.clientY - p2.clientY;
+		const dist = Math.hypot(dx, dy);
+		if (!startDist) startDist = dist;
+		return dist;
+	}
+
+	function applyScale(el) {
+		el.style.transform = `scale(${scale})`;
+
+		// block swiper swiping when zoomed in
+		mainSwiper.allowTouchMove = scale === 1;
+	}
+
+	function enableDoubleTapClose(target) {
+		target.addEventListener("click", (e) => {
+			const now = Date.now();
+			if (now - lastTap < 300 && scale > 1) {
+				resetZoom(target);
+				closeFullscreen();
+			}
+			lastTap = now;
+		});
+	}
+
+	function resetZoom(target) {
+		scale = 1;
+		startScale = 1;
+		startDist = null;
+		isZoomed = false;
+
+		target.style.transform = "scale(1)";
+		mainSwiper.allowTouchMove = true;
 	}
 
 	document
