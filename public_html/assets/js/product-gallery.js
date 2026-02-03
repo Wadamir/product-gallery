@@ -2,6 +2,12 @@ document.addEventListener("DOMContentLoaded", () => {
 	let isFullscreen = false;
 	let userPausedVideo = false;
 
+	const closeBtn = document.querySelector(".gallery-close");
+
+	if (closeBtn) {
+		closeBtn.addEventListener("click", closeFullscreen);
+	}
+
 	const thumbsSwiper = new Swiper(".thumbs-swiper", {
 		slidesPerView: "auto",
 		spaceBetween: 12,

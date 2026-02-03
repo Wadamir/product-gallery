@@ -2,6 +2,9 @@
 <div class="product-card">
 
     <div class="product-gallery-wrapper">
+        <button class="gallery-close" type="button" aria-label="Close gallery">
+            &times;
+        </button>
         <div class="product-gallery">
             <div class="product-main-image">
                 <div class="sticker-wrapper"><span class="product-badge">New</span></div>

@@ -709,3 +709,42 @@ body.no-scroll {
 
 	display: block;
 }
+
+
+.gallery-close {
+	position: absolute;
+	top: calc(16px + env(safe-area-inset-top));
+	right: calc(16px + env(safe-area-inset-right));
+
+	z-index: 10001;
+
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background: rgba(0, 0, 0, 0.6);
+	color: #fff;
+
+	font-size: 28px;
+	line-height: 1;
+
+	border: none;
+	cursor: pointer;
+
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+}
+
+/* hide on not fullscreen */
+.product-gallery-wrapper:not(.is-fullscreen) .gallery-close {
+	display: none;
+}
+
+/* tap feedback */
+.gallery-close:active {
+	transform: scale(0.95);
+}
