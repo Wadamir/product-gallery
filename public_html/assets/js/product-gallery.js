@@ -18,18 +18,61 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (!DEBUG_GESTURES || !debugEl) return;
 
 		if (data.status)
-			debugEl.children[0].textContent = `status: ${data.status}`;
+			debugEl.children[1].textContent = `status: ${data.status}`;
 
 		if (data.event)
-			debugEl.children[1].textContent = `event: ${data.event}`;
+			debugEl.children[2].textContent = `event: ${data.event}`;
 
 		if (data.pointers !== undefined)
-			debugEl.children[2].textContent = `pointers: ${data.pointers}`;
+			debugEl.children[3].textContent = `pointers: ${data.pointers}`;
 
 		if (data.scale !== undefined)
-			debugEl.children[3].textContent = `scale: ${data.scale.toFixed(2)}`;
+			debugEl.children[4].textContent = `scale: ${data.scale.toFixed(2)}`;
 
-		if (data.last) debugEl.children[4].textContent = `last: ${data.last}`;
+		if (data.last) debugEl.children[5].textContent = `last: ${data.last}`;
+	}
+
+	function debugSwiperUpdate(data = {}) {
+		if (!DEBUG_GESTURES || !debugEl) return;
+
+		const base = 7; // индекс, где начинается Swiper-блок
+
+		if (data.event) {
+			console.log(
+				"debugEl.children[base + 1]",
+				debugEl.children[base + 1],
+			);
+			if (debugEl.children[base + 1])
+				debugEl.children[base + 1].textContent = `event: ${data.event}`;
+		}
+
+		if (data.touch !== undefined) {
+			console.log(
+				"debugEl.children[base + 2]",
+				debugEl.children[base + 2],
+			);
+			if (debugEl.children[base + 2])
+				debugEl.children[base + 2].textContent = `touch: ${data.touch}`;
+		}
+
+		if (data.slide !== undefined) {
+			console.log(
+				"debugEl.children[base + 3]",
+				debugEl.children[base + 3],
+			);
+			if (debugEl.children[base + 3])
+				debugEl.children[base + 3].textContent = `slide: ${data.slide}`;
+		}
+
+		if (data.allowTouchMove !== undefined) {
+			console.log(
+				"debugEl.children[base + 4]",
+				debugEl.children[base + 4],
+			);
+			if (debugEl.children[base + 4])
+				debugEl.children[base + 4].textContent =
+					`allowTouchMove: ${data.allowTouchMove}`;
+		}
 	}
 
 	function enableDoubleTapClose(target) {
@@ -100,21 +143,64 @@ document.addEventListener("DOMContentLoaded", () => {
 	const mainSwiper = new Swiper(".main-swiper", {
 		slidesPerView: 1,
 		initialSlide: 0,
-		thumbs: {
-			swiper: thumbsSwiper,
-		},
+		thumbs: { swiper: thumbsSwiper },
 		navigation: {
 			prevEl: ".main-prev",
 			nextEl: ".main-next",
 		},
 		on: {
 			init(swiper) {
-				toggleMainArrows(swiper);
-				initVideoControls(swiper);
-				handleVideo(swiper);
+				debugSwiperUpdate({
+					event: "init",
+					allowTouchMove: swiper.allowTouchMove,
+				});
 			},
+
+			touchStart(swiper, event) {
+				debugSwiperUpdate({
+					event: "touchStart",
+					touch: event?.type,
+					allowTouchMove: swiper.allowTouchMove,
+				});
+			},
+
+			touchMove(swiper, event) {
+				debugSwiperUpdate({
+					event: "touchMove",
+					touch: event?.type,
+				});
+			},
+
+			touchEnd(swiper) {
+				debugSwiperUpdate({
+					event: "touchEnd",
+					allowTouchMove: swiper.allowTouchMove,
+				});
+			},
+
+			sliderMove(swiper) {
+				debugSwiperUpdate({
+					event: "sliderMove",
+				});
+			},
+
 			slideChange(swiper) {
-				handleVideo(swiper);
+				debugSwiperUpdate({
+					event: "slideChange",
+					slide: swiper.activeIndex,
+				});
+			},
+
+			transitionStart(swiper) {
+				debugSwiperUpdate({
+					event: "transitionStart",
+				});
+			},
+
+			transitionEnd(swiper) {
+				debugSwiperUpdate({
+					event: "transitionEnd",
+				});
 			},
 		},
 	});
