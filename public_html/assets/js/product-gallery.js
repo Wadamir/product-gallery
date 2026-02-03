@@ -1,4 +1,94 @@
+const DEBUG_GESTURES = true;
+
 document.addEventListener("DOMContentLoaded", () => {
+	/* Debug gesture events */
+	const debugEl = document.querySelector(".gesture-debug");
+
+	function debugShow() {
+		if (DEBUG_GESTURES && debugEl) {
+			debugEl.hidden = false;
+		}
+	}
+
+	function debugHide() {
+		if (debugEl) debugEl.hidden = true;
+	}
+
+	function debugUpdate(data = {}) {
+		if (!DEBUG_GESTURES || !debugEl) return;
+
+		if (data.status)
+			debugEl.children[0].textContent = `status: ${data.status}`;
+
+		if (data.event)
+			debugEl.children[1].textContent = `event: ${data.event}`;
+
+		if (data.pointers !== undefined)
+			debugEl.children[2].textContent = `pointers: ${data.pointers}`;
+
+		if (data.scale !== undefined)
+			debugEl.children[3].textContent = `scale: ${data.scale.toFixed(2)}`;
+
+		if (data.last) debugEl.children[4].textContent = `last: ${data.last}`;
+	}
+
+	function onPointerDown(e) {
+		pointers.set(e.pointerId, e);
+
+		debugUpdate({
+			event: "pointerdown",
+			pointers: pointers.size,
+			last: `id=${e.pointerId}`,
+		});
+	}
+
+	function onPointerMove(e) {
+		if (!pointers.has(e.pointerId)) return;
+
+		pointers.set(e.pointerId, e);
+
+		debugUpdate({
+			event: "pointermove",
+			pointers: pointers.size,
+			scale,
+		});
+	}
+
+	function onPointerUp(e) {
+		pointers.delete(e.pointerId);
+
+		debugUpdate({
+			event: "pointerup",
+			pointers: pointers.size,
+		});
+	}
+
+	function enableDoubleTapClose(target) {
+		target.addEventListener("click", () => {
+			const now = Date.now();
+			const diff = now - lastTap;
+
+			if (diff < 300 && scale > 1) {
+				debugUpdate({
+					event: "double-tap",
+					last: "close fullscreen",
+				});
+
+				resetZoom(target);
+				closeFullscreen();
+			} else {
+				debugUpdate({
+					event: "tap",
+					last: `delta=${diff}ms`,
+				});
+			}
+
+			lastTap = now;
+		});
+	}
+
+	/* End debug gesture events */
+
 	let isFullscreen = false;
 	let userPausedVideo = false;
 
@@ -126,6 +216,11 @@ document.addEventListener("DOMContentLoaded", () => {
 			.querySelector(".product-gallery-wrapper")
 			.classList.add("is-fullscreen");
 
+		/* debug gesture events */
+		debugShow();
+		debugUpdate({ status: "fullscreen opened" });
+		/* end debug gesture events */
+
 		// iOs fix for Swiper not updating correctly
 		requestAnimationFrame(() => {
 			mainSwiper.update();
@@ -156,6 +251,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		document
 			.querySelector(".product-gallery-wrapper")
 			.classList.remove("is-fullscreen");
+
+		/* debug gesture events */
+		debugUpdate({ status: "fullscreen closed" });
+		debugHide();
+		/* end debug gesture events */
 
 		mainSwiper.update();
 	}

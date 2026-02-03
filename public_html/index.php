@@ -5,6 +5,14 @@
         <button class="gallery-close" type="button" aria-label="Close gallery">
             &times;
         </button>
+        
+        <div class="gesture-debug" hidden>
+            <div class="gesture-debug__line">status: —</div>
+            <div class="gesture-debug__line">event: —</div>
+            <div class="gesture-debug__line">pointers: 0</div>
+            <div class="gesture-debug__line">scale: 1</div>
+            <div class="gesture-debug__line">last: —</div>
+        </div>
         <div class="product-gallery">
             <div class="product-main-image">
                 <div class="sticker-wrapper"><span class="product-badge">New</span></div>
