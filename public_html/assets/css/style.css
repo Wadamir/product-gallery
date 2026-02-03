@@ -676,6 +676,7 @@ body.no-scroll {
 	object-fit: contain;
 
     /* pinch to zoom support start */
+    touch-action: none;
     transform-origin: center center;
 	transition: transform 0.25s ease;
 	will-change: transform;

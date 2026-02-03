@@ -32,37 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (data.last) debugEl.children[4].textContent = `last: ${data.last}`;
 	}
 
-	function onPointerDown(e) {
-		pointers.set(e.pointerId, e);
-
-		debugUpdate({
-			event: "pointerdown",
-			pointers: pointers.size,
-			last: `id=${e.pointerId}`,
-		});
-	}
-
-	function onPointerMove(e) {
-		if (!pointers.has(e.pointerId)) return;
-
-		pointers.set(e.pointerId, e);
-
-		debugUpdate({
-			event: "pointermove",
-			pointers: pointers.size,
-			scale,
-		});
-	}
-
-	function onPointerUp(e) {
-		pointers.delete(e.pointerId);
-
-		debugUpdate({
-			event: "pointerup",
-			pointers: pointers.size,
-		});
-	}
-
 	function enableDoubleTapClose(target) {
 		target.addEventListener("click", () => {
 			const now = Date.now();
@@ -146,6 +115,19 @@ document.addEventListener("DOMContentLoaded", () => {
 			},
 		},
 	});
+
+	/* pinch to zoom support start */
+	mainSwiper.on("slideChange", () => {
+		const active = document.querySelector(
+			".swiper-slide-active img, .swiper-slide-active video",
+		);
+
+		if (active) {
+			enablePinchZoom(active);
+			enableDoubleTapClose(active);
+		}
+	});
+	/* pinch to zoom support end */
 
 	function toggleMainArrows(swiper) {
 		const root = swiper.el;
@@ -270,6 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	function onPointerDown(e) {
 		pointers.set(e.pointerId, e);
+		/* debug gesture events */
+		debugUpdate({
+			event: "pointerdown",
+			pointers: pointers.size,
+			last: `id=${e.pointerId}`,
+		});
+		/* end debug gesture events */
 	}
 
 	function onPointerMove(e) {
@@ -286,6 +275,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 			applyScale(e.target);
 		}
+
+		/* debug gesture events */
+		debugUpdate({
+			event: "pointermove",
+			pointers: pointers.size,
+			scale,
+		});
+		/* end debug gesture events */
 	}
 
 	function onPointerUp(e) {
@@ -295,6 +292,13 @@ document.addEventListener("DOMContentLoaded", () => {
 			startScale = scale;
 			isZoomed = scale > 1;
 		}
+
+		/* debug gesture events */
+		debugUpdate({
+			event: "pointerup",
+			pointers: pointers.size,
+		});
+		/* end debug gesture events */
 	}
 
 	function getDistance(p1, p2) {
