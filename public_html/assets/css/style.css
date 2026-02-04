@@ -683,6 +683,10 @@ body.no-scroll {
     /* pinch to zoom support end */
 }
 
+.product-gallery-wrapper.is-fullscreen video {
+	touch-action: pan-x pan-y;
+}
+
 /*** Thumbnails in fullscreen ***/
 .product-gallery-wrapper.is-fullscreen .product-thumbnails-wrapper {
     position: absolute;

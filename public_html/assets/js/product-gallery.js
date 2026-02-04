@@ -121,6 +121,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	let lastTapTime = 0;
 	let didPinch = false;
+
+	let isPanning = false;
+	let panStartX = 0;
+	let panStartY = 0;
+	let startTranslateX = 0;
+	let startTranslateY = 0;
 	/* pinch to zoom support end */
 
 	const thumbsSwiper = new Swiper(".thumbs-swiper", {
@@ -220,6 +226,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 	/* pinch to zoom support end */
+
+	function isZoomableElement(el) {
+		return el && el.tagName === "IMG";
+	}
 
 	function toggleMainArrows(swiper) {
 		const root = swiper.el;
@@ -343,18 +353,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
 	/* pinch to zoom support start */
 	function enablePinchZoom(target) {
+		if (!isZoomableElement(target)) return;
 		target.addEventListener("pointerdown", onPointerDown);
 		target.addEventListener("pointermove", onPointerMove);
 		target.addEventListener("pointerup", onPointerUp);
 		target.addEventListener("pointercancel", onPointerUp);
 	}
 
+	// function onPointerDown(e) {
+	// 	pointers.set(e.pointerId, e);
+
+	// 	const now = Date.now();
+
+	// 	// double tap detection
+	// 	if (
+	// 		pointers.size === 1 &&
+	// 		now - lastTapTime < 300 &&
+	// 		scale > 1 &&
+	// 		!didPinch
+	// 	) {
+	// 		debugUpdate({
+	// 			event: "double-tap",
+	// 			last: "reset zoom",
+	// 		});
+
+	// 		resetZoom(e.target);
+	// 		lastTapTime = 0;
+	// 		return;
+	// 	}
+
+	// 	lastTapTime = now;
+	// 	didPinch = false;
+
+	// 	debugUpdate({
+	// 		event: "pointerdown",
+	// 		pointers: pointers.size,
+	// 	});
+	// }
+
 	function onPointerDown(e) {
+		if (!isZoomableElement(e.target)) return;
+
 		pointers.set(e.pointerId, e);
+
+		if (scale > 1 && pointers.size === 1) {
+			isPanning = true;
+			panStartX = e.clientX;
+			panStartY = e.clientY;
+			startTranslateX = translateX;
+			startTranslateY = translateY;
+		}
 
 		const now = Date.now();
 
-		// double tap detection
 		if (
 			pointers.size === 1 &&
 			now - lastTapTime < 300 &&
@@ -380,13 +431,39 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
+	// function onPointerMove(e) {
+	// 	if (!pointers.has(e.pointerId)) return;
+
+	// 	pointers.set(e.pointerId, e);
+
+	// 	if (pointers.size === 2) {
+	// 		didPinch = true;
+
+	// 		const [p1, p2] = Array.from(pointers.values());
+	// 		const dist = getDistance(p1, p2);
+
+	// 		if (!startScale) startScale = scale;
+	// 		scale = Math.min(Math.max(startScale * (dist / startDist), 1), 4);
+
+	// 		applyScale(e.target);
+	// 	}
+
+	// 	debugUpdate({
+	// 		event: "pointermove",
+	// 		pointers: pointers.size,
+	// 		scale,
+	// 	});
+	// }
+
 	function onPointerMove(e) {
 		if (!pointers.has(e.pointerId)) return;
 
 		pointers.set(e.pointerId, e);
 
+		// Pinch
 		if (pointers.size === 2) {
 			didPinch = true;
+			isPanning = false;
 
 			const [p1, p2] = Array.from(pointers.values());
 			const dist = getDistance(p1, p2);
@@ -394,7 +471,19 @@ document.addEventListener("DOMContentLoaded", () => {
 			if (!startScale) startScale = scale;
 			scale = Math.min(Math.max(startScale * (dist / startDist), 1), 4);
 
-			applyScale(e.target);
+			applyTransform(e.target);
+			return;
+		}
+
+		// Pan
+		if (isPanning && scale > 1) {
+			const dx = e.clientX - panStartX;
+			const dy = e.clientY - panStartY;
+
+			translateX = startTranslateX + dx;
+			translateY = startTranslateY + dy;
+
+			applyTransform(e.target);
 		}
 
 		debugUpdate({
@@ -404,13 +493,31 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
+	// function onPointerUp(e) {
+	// 	pointers.delete(e.pointerId);
+
+	// 	if (pointers.size < 2) {
+	// 		startDist = null;
+	// 		startScale = scale;
+	// 		isZoomed = scale > 1;
+	// 	}
+
+	// 	debugUpdate({
+	// 		event: "pointerup",
+	// 		pointers: pointers.size,
+	// 	});
+	// }
+
 	function onPointerUp(e) {
 		pointers.delete(e.pointerId);
 
 		if (pointers.size < 2) {
 			startDist = null;
 			startScale = scale;
-			isZoomed = scale > 1;
+		}
+
+		if (pointers.size === 0) {
+			isPanning = false;
 		}
 
 		debugUpdate({
@@ -427,12 +534,18 @@ document.addEventListener("DOMContentLoaded", () => {
 		return dist;
 	}
 
-	function applyScale(el) {
-		el.style.transform = `scale(${scale})`;
+	function applyTransform(el) {
+		el.style.transform = `translate(${translateX}px, ${translateY}px) scale(${scale})`;
 
-		// block swiper swiping when zoomed in
 		mainSwiper.allowTouchMove = scale === 1;
 	}
+
+	// function applyScale(el) {
+	// 	el.style.transform = `scale(${scale})`;
+
+	// 	// block swiper swiping when zoomed in
+	// 	mainSwiper.allowTouchMove = scale === 1;
+	// }
 
 	// function enableDoubleTapClose(target) {
 	// 	target.addEventListener("click", (e) => {
@@ -445,14 +558,29 @@ document.addEventListener("DOMContentLoaded", () => {
 	// 	});
 	// }
 
+	// function resetZoom(target) {
+	// 	scale = 1;
+	// 	startScale = 1;
+	// 	startDist = null;
+	// 	isZoomed = false;
+	// 	didPinch = false;
+
+	// 	target.style.transform = "scale(1)";
+	// 	mainSwiper.allowTouchMove = true;
+	// }
+
 	function resetZoom(target) {
 		scale = 1;
 		startScale = 1;
 		startDist = null;
-		isZoomed = false;
+
+		translateX = 0;
+		translateY = 0;
+
+		isPanning = false;
 		didPinch = false;
 
-		target.style.transform = "scale(1)";
+		target.style.transform = "translate(0, 0) scale(1)";
 		mainSwiper.allowTouchMove = true;
 	}
 
