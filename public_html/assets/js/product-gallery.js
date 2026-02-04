@@ -127,6 +127,10 @@ document.addEventListener("DOMContentLoaded", () => {
 	let panStartY = 0;
 	let startTranslateX = 0;
 	let startTranslateY = 0;
+
+	let videoPointerStartX = 0;
+	let videoPointerStartY = 0;
+	let videoPointerMoved = false;
 	/* pinch to zoom support end */
 
 	const thumbsSwiper = new Swiper(".thumbs-swiper", {
@@ -157,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		on: {
 			init(swiper) {
 				toggleMainArrows(swiper);
+				initVideoControls(swiper);
 				handleVideo(swiper);
 				debugSwiperUpdate({
 					event: "init",
@@ -193,6 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			},
 
 			slideChange(swiper) {
+				initVideoControls(swiper);
 				handleVideo(swiper);
 				debugSwiperUpdate({
 					event: "slideChange",
@@ -242,24 +248,65 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	}
 
+	// function initVideoControls(swiper) {
+	// 	const slide = swiper.slides[0];
+	// 	if (!slide || !slide.classList.contains("is-video")) return;
+
+	// 	const video = slide.querySelector("video");
+	// 	const wrapper = slide.querySelector(".video-wrapper");
+	// 	if (!video || !wrapper) return;
+
+	// 	video.addEventListener("click", (e) => {
+	// 		e.stopPropagation();
+
+	// 		if (video.paused) {
+	// 			console.log("play");
+	// 			video.play().catch(() => {});
+	// 			wrapper.classList.remove("is-paused");
+	// 			userPausedVideo = false;
+	// 		} else {
+	// 			console.log("pause");
+	// 			video.pause();
+	// 			wrapper.classList.add("is-paused");
+	// 			userPausedVideo = true;
+	// 		}
+	// 	});
+	// }
+
 	function initVideoControls(swiper) {
-		const slide = swiper.slides[0];
+		const slide = swiper.slides[swiper.activeIndex];
 		if (!slide || !slide.classList.contains("is-video")) return;
 
 		const video = slide.querySelector("video");
 		const wrapper = slide.querySelector(".video-wrapper");
 		if (!video || !wrapper) return;
 
-		video.addEventListener("click", (e) => {
-			e.stopPropagation();
+		if (video.__controlsBound) return;
+		video.__controlsBound = true;
+
+		video.addEventListener("pointerdown", (e) => {
+			videoPointerStartX = e.clientX;
+			videoPointerStartY = e.clientY;
+			videoPointerMoved = false;
+		});
+
+		video.addEventListener("pointermove", (e) => {
+			const dx = Math.abs(e.clientX - videoPointerStartX);
+			const dy = Math.abs(e.clientY - videoPointerStartY);
+
+			if (dx > 6 || dy > 6) {
+				videoPointerMoved = true;
+			}
+		});
+
+		video.addEventListener("pointerup", (e) => {
+			if (videoPointerMoved) return;
 
 			if (video.paused) {
-				console.log("play");
 				video.play().catch(() => {});
 				wrapper.classList.remove("is-paused");
 				userPausedVideo = false;
 			} else {
-				console.log("pause");
 				video.pause();
 				wrapper.classList.add("is-paused");
 				userPausedVideo = true;
