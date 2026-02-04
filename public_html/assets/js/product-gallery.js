@@ -198,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			},
 
 			slideChange(swiper) {
+                resetAllZoom(swiper);
+                
 				initVideoControls(swiper);
 				handleVideo(swiper);
 				debugSwiperUpdate({
@@ -629,6 +631,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		target.style.transform = "translate(0, 0) scale(1)";
 		mainSwiper.allowTouchMove = true;
+	}
+
+	function resetAllZoom(swiper) {
+		scale = 1;
+		startScale = 1;
+		startDist = null;
+		isPanning = false;
+		didPinch = false;
+
+		translateX = 0;
+		translateY = 0;
+
+		mainSwiper.allowTouchMove = true;
+
+		swiper.slides.forEach((slide) => {
+			const img = slide.querySelector("img");
+			if (img) {
+				img.style.transform = "translate(0, 0) scale(1)";
+			}
+		});
 	}
 
 	document
