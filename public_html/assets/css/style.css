@@ -15,8 +15,8 @@
 
 
 
-    --main-img-width: 960px;
-    --main-img-height: 960px;
+    --main-img-width: 1080px;
+    --main-img-height: 1440px;
 
     --thumb-width: calc(var(--main-img-width) / 10);
     --thumb-height: calc(var(--main-img-height) / 10);
@@ -693,6 +693,10 @@ body.no-scroll {
 	flex-shrink: 0;
 }
 
+/* .img-aspect-ratio .video-wrapper {
+    aspect-ratio: var(--gallery-ratio);
+} */
+
 .product-gallery-wrapper.is-fullscreen .media-wrapper {
 	height: auto;
 	max-height: 100%;
@@ -711,6 +715,10 @@ body.no-scroll {
     touch-action: none;
     overflow: hidden;
     /* pinch to zoom support end */
+}
+
+.product-gallery-wrapper.is-fullscreen .media-wrapper.video-wrapper {
+    aspect-ratio: auto;
 }
 
 .product-gallery-wrapper.is-fullscreen img,

@@ -1,4 +1,4 @@
-const DEBUG_GESTURES = true;
+const DEBUG_GESTURES = false;
 
 document.addEventListener("DOMContentLoaded", () => {
 	/* Debug gesture events */

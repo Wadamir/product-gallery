@@ -25,14 +25,14 @@
             <div class="product-main-image">
                 <div class="sticker-wrapper"><span class="product-badge">New</span></div>
 
-                <div class="swiper main-swiper img-aspect-ratio__">
+                <div class="swiper main-swiper img-aspect-ratio">
                     <button class="main-arrow main-prev" type="button" aria-label="Previous">
                         <i class="bi bi-chevron-compact-left"></i>
                     </button>
                     <div class="swiper-wrapper">
                         <!-- VIDEO SLIDE -->
                         <div class="swiper-slide is-video">
-                            <div class="media-wrapper video-wrapper" style="background-image: url('/assets/images/photo_door0.png')">
+                            <div class="media-wrapper video-wrapper" style="background-image: url('/assets/images/product-0.jpg')">
                                 <button class="video-fullscreen-btn" type="button" aria-label="Open video fullscreen">
                                     <i class="bi bi-arrows-fullscreen"></i>
                                 </button>
@@ -54,36 +54,36 @@
                         <!-- IMAGE SLIDES -->
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/photo_door1.png">
-                                    <img src="/assets/images/photo_door1.png" alt="">
+                                <a href="/assets/images/product-1.jpg">
+                                    <img src="/assets/images/product-1.jpg" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/photo_door2.png">
-                                    <img src="/assets/images/photo_door2.png" alt="">
+                                <a href="/assets/images/product-2.jpg">
+                                    <img src="/assets/images/product-2.jpg" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/photo_door3.png">
-                                    <img src="/assets/images/photo_door3.png" alt="">
+                                <a href="/assets/images/product-3.jpg">
+                                    <img src="/assets/images/product-3.jpg" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/photo_door4.png">
-                                    <img src="/assets/images/photo_door4.png" alt="">
+                                <a href="/assets/images/product-4.jpg">
+                                    <img src="/assets/images/product-4.jpg" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/photo_door5.png">
-                                    <img src="/assets/images/photo_door5.png" alt="">
+                                <a href="/assets/images/product-5.jpg">
+                                    <img src="/assets/images/product-5.jpg" alt="">
                                 </a>
                             </div>
                         </div>
@@ -104,25 +104,25 @@
                         <!-- VIDEO THUMB -->
                         <div class="swiper-slide thumb is-video-thumb">
                             <div class="thumb-wrapper">
-                                <img src="/assets/images/photo_door0.png" alt="Video thumbnail">
+                                <img src="/assets/images/product-0.jpg" alt="Video thumbnail">
                             </div>
                         </div>
 
                         <!-- IMAGE THUMBS -->
                         <div class="swiper-slide thumb">
-                            <div class="thumb-wrapper"><img src="/assets/images/photo_door1.png"></div>
+                            <div class="thumb-wrapper"><img src="/assets/images/product-1.jpg"></div>
                         </div>
                         <div class="swiper-slide thumb">
-                            <div class="thumb-wrapper"><img src="/assets/images/photo_door2.png"></div>
+                            <div class="thumb-wrapper"><img src="/assets/images/product-2.jpg"></div>
                         </div>
                         <div class="swiper-slide thumb">
-                            <div class="thumb-wrapper"><img src="/assets/images/photo_door3.png"></div>
+                            <div class="thumb-wrapper"><img src="/assets/images/product-3.jpg"></div>
                         </div>
                         <div class="swiper-slide thumb">
-                            <div class="thumb-wrapper"><img src="/assets/images/photo_door4.png"></div>
+                            <div class="thumb-wrapper"><img src="/assets/images/product-4.jpg"></div>
                         </div>
                         <div class="swiper-slide thumb">
-                            <div class="thumb-wrapper"><img src="/assets/images/photo_door5.png"></div>
+                            <div class="thumb-wrapper"><img src="/assets/images/product-5.jpg"></div>
                         </div>
                     </div>
                 </div>
