@@ -41,7 +41,7 @@
                                 </div>
                                 <video
                                     class="product-video"
-                                    src="/assets/video/karmina-video-01.mp4"
+                                    src="/assets/video/video_door.mp4"
                                     muted
                                     playsinline
                                     autoplay
