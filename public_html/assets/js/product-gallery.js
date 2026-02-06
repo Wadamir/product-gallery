@@ -125,6 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	let isPanning = false;
 	let panStartX = 0;
 	let panStartY = 0;
+	let translateX = 0;
+	let translateY = 0;
 	let startTranslateX = 0;
 	let startTranslateY = 0;
 
@@ -198,8 +200,8 @@ document.addEventListener("DOMContentLoaded", () => {
 			},
 
 			slideChange(swiper) {
-                resetAllZoom(swiper);
-                
+				resetAllZoom(swiper);
+
 				initVideoControls(swiper);
 				handleVideo(swiper);
 				debugSwiperUpdate({
@@ -249,31 +251,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			root.classList.remove("no-arrows");
 		}
 	}
-
-	// function initVideoControls(swiper) {
-	// 	const slide = swiper.slides[0];
-	// 	if (!slide || !slide.classList.contains("is-video")) return;
-
-	// 	const video = slide.querySelector("video");
-	// 	const wrapper = slide.querySelector(".video-wrapper");
-	// 	if (!video || !wrapper) return;
-
-	// 	video.addEventListener("click", (e) => {
-	// 		e.stopPropagation();
-
-	// 		if (video.paused) {
-	// 			console.log("play");
-	// 			video.play().catch(() => {});
-	// 			wrapper.classList.remove("is-paused");
-	// 			userPausedVideo = false;
-	// 		} else {
-	// 			console.log("pause");
-	// 			video.pause();
-	// 			wrapper.classList.add("is-paused");
-	// 			userPausedVideo = true;
-	// 		}
-	// 	});
-	// }
 
 	function initVideoControls(swiper) {
 		const slide = swiper.slides[swiper.activeIndex];
@@ -403,42 +380,14 @@ document.addEventListener("DOMContentLoaded", () => {
 	/* pinch to zoom support start */
 	function enablePinchZoom(target) {
 		if (!isZoomableElement(target)) return;
+		if (target.__pinchZoomEnabled) return;
+
+		target.__pinchZoomEnabled = true;
 		target.addEventListener("pointerdown", onPointerDown);
 		target.addEventListener("pointermove", onPointerMove);
 		target.addEventListener("pointerup", onPointerUp);
 		target.addEventListener("pointercancel", onPointerUp);
 	}
-
-	// function onPointerDown(e) {
-	// 	pointers.set(e.pointerId, e);
-
-	// 	const now = Date.now();
-
-	// 	// double tap detection
-	// 	if (
-	// 		pointers.size === 1 &&
-	// 		now - lastTapTime < 300 &&
-	// 		scale > 1 &&
-	// 		!didPinch
-	// 	) {
-	// 		debugUpdate({
-	// 			event: "double-tap",
-	// 			last: "reset zoom",
-	// 		});
-
-	// 		resetZoom(e.target);
-	// 		lastTapTime = 0;
-	// 		return;
-	// 	}
-
-	// 	lastTapTime = now;
-	// 	didPinch = false;
-
-	// 	debugUpdate({
-	// 		event: "pointerdown",
-	// 		pointers: pointers.size,
-	// 	});
-	// }
 
 	function onPointerDown(e) {
 		if (!isZoomableElement(e.target)) return;
@@ -480,30 +429,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
-	// function onPointerMove(e) {
-	// 	if (!pointers.has(e.pointerId)) return;
-
-	// 	pointers.set(e.pointerId, e);
-
-	// 	if (pointers.size === 2) {
-	// 		didPinch = true;
-
-	// 		const [p1, p2] = Array.from(pointers.values());
-	// 		const dist = getDistance(p1, p2);
-
-	// 		if (!startScale) startScale = scale;
-	// 		scale = Math.min(Math.max(startScale * (dist / startDist), 1), 4);
-
-	// 		applyScale(e.target);
-	// 	}
-
-	// 	debugUpdate({
-	// 		event: "pointermove",
-	// 		pointers: pointers.size,
-	// 		scale,
-	// 	});
-	// }
-
 	function onPointerMove(e) {
 		if (!pointers.has(e.pointerId)) return;
 
@@ -542,21 +467,6 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
-	// function onPointerUp(e) {
-	// 	pointers.delete(e.pointerId);
-
-	// 	if (pointers.size < 2) {
-	// 		startDist = null;
-	// 		startScale = scale;
-	// 		isZoomed = scale > 1;
-	// 	}
-
-	// 	debugUpdate({
-	// 		event: "pointerup",
-	// 		pointers: pointers.size,
-	// 	});
-	// }
-
 	function onPointerUp(e) {
 		pointers.delete(e.pointerId);
 
@@ -588,35 +498,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		mainSwiper.allowTouchMove = scale === 1;
 	}
-
-	// function applyScale(el) {
-	// 	el.style.transform = `scale(${scale})`;
-
-	// 	// block swiper swiping when zoomed in
-	// 	mainSwiper.allowTouchMove = scale === 1;
-	// }
-
-	// function enableDoubleTapClose(target) {
-	// 	target.addEventListener("click", (e) => {
-	// 		const now = Date.now();
-	// 		if (now - lastTap < 300 && scale > 1) {
-	// 			resetZoom(target);
-	// 			closeFullscreen();
-	// 		}
-	// 		lastTap = now;
-	// 	});
-	// }
-
-	// function resetZoom(target) {
-	// 	scale = 1;
-	// 	startScale = 1;
-	// 	startDist = null;
-	// 	isZoomed = false;
-	// 	didPinch = false;
-
-	// 	target.style.transform = "scale(1)";
-	// 	mainSwiper.allowTouchMove = true;
-	// }
 
 	function resetZoom(target) {
 		scale = 1;

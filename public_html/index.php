@@ -37,29 +37,11 @@
                                     <i class="bi bi-arrows-fullscreen"></i>
                                 </button>
                                 <div class="video-loader">
-                                    <svg width="48" height="48" viewBox="0 0 50 50">
-                                        <circle
-                                            cx="25"
-                                            cy="25"
-                                            r="20"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            stroke-width="4"
-                                            stroke-linecap="round"
-                                            stroke-dasharray="31.4 31.4">
-                                            <animateTransform
-                                                attributeName="transform"
-                                                type="rotate"
-                                                from="0 25 25"
-                                                to="360 25 25"
-                                                dur="1s"
-                                                repeatCount="indefinite" />
-                                        </circle>
-                                    </svg>
+                                    <span class="spinner"></span>
                                 </div>
                                 <video
                                     class="product-video"
-                                    src="/assets/video/product-video.mp4"
+                                    src="/assets/video/karmina-video-01.mp4"
                                     muted
                                     playsinline
                                     autoplay
@@ -72,36 +54,36 @@
                         <!-- IMAGE SLIDES -->
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/product-1.jpg" data-pswp-width="640" data-pswp-height="960">
-                                    <img src="/assets/images/product-1.jpg" alt="">
+                                <a href="/assets/images/photo_door1.png">
+                                    <img src="/assets/images/photo_door1.png" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/product-2.jpg" data-pswp-width="640" data-pswp-height="960">
-                                    <img src="/assets/images/product-2.jpg" alt="">
+                                <a href="/assets/images/photo_door2.png">
+                                    <img src="/assets/images/photo_door2.png" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/product-3.jpg" data-pswp-width="640" data-pswp-height="960">
-                                    <img src="/assets/images/product-3.jpg" alt="">
+                                <a href="/assets/images/photo_door3.png">
+                                    <img src="/assets/images/photo_door3.png" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/product-4.jpg" data-pswp-width="640" data-pswp-height="960">
-                                    <img src="/assets/images/product-4.jpg" alt="">
+                                <a href="/assets/images/photo_door4.png">
+                                    <img src="/assets/images/photo_door4.png" alt="">
                                 </a>
                             </div>
                         </div>
                         <div class="swiper-slide">
                             <div class="media-wrapper image-wrapper">
-                                <a href="/assets/images/product-5.jpg" data-pswp-width="640" data-pswp-height="960">
-                                    <img src="/assets/images/product-5.jpg" alt="">
+                                <a href="/assets/images/photo_door5.png">
+                                    <img src="/assets/images/photo_door5.png" alt="">
                                 </a>
                             </div>
                         </div>
@@ -121,16 +103,15 @@
 
                         <!-- VIDEO THUMB -->
                         <div class="swiper-slide thumb is-video-thumb">
-                            <img src="/assets/images/video-placeholder.png" alt="Video thumbnail">
-                            <span class="video-icon d-none hidden">▶</span>
+                            <img src="/assets/images/photo_door0.png" alt="Video thumbnail">
                         </div>
 
                         <!-- IMAGE THUMBS -->
-                        <div class="swiper-slide thumb"><img src="/assets/images/product-1.jpg"></div>
-                        <div class="swiper-slide thumb"><img src="/assets/images/product-2.jpg"></div>
-                        <div class="swiper-slide thumb"><img src="/assets/images/product-3.jpg"></div>
-                        <div class="swiper-slide thumb"><img src="/assets/images/product-4.jpg"></div>
-                        <div class="swiper-slide thumb"><img src="/assets/images/product-5.jpg"></div>
+                        <div class="swiper-slide thumb"><img src="/assets/images/photo_door1.png"></div>
+                        <div class="swiper-slide thumb"><img src="/assets/images/photo_door2.png"></div>
+                        <div class="swiper-slide thumb"><img src="/assets/images/photo_door3.png"></div>
+                        <div class="swiper-slide thumb"><img src="/assets/images/photo_door4.png"></div>
+                        <div class="swiper-slide thumb"><img src="/assets/images/photo_door5.png"></div>
                     </div>
                 </div>
                 <button class="thumbs-arrow thumbs-next" type="button" aria-label="Next">
