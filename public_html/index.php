@@ -32,7 +32,7 @@
                     <div class="swiper-wrapper">
                         <!-- VIDEO SLIDE -->
                         <div class="swiper-slide is-video">
-                            <div class="media-wrapper video-wrapper">
+                            <div class="media-wrapper video-wrapper" style="background-image: url('/assets/images/photo_door0.png')">
                                 <button class="video-fullscreen-btn" type="button" aria-label="Open video fullscreen">
                                     <i class="bi bi-arrows-fullscreen"></i>
                                 </button>
@@ -41,7 +41,7 @@
                                 </div>
                                 <video
                                     class="product-video"
-                                    src="/assets/video/video_door.mp4"
+                                    src="/assets/video/karmina-video-01.mp4"
                                     muted
                                     playsinline
                                     autoplay
