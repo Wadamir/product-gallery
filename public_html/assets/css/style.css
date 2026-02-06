@@ -15,8 +15,8 @@
 
 
 
-    --main-img-width: 1000px;
-    --main-img-height: 977px;
+    --main-img-width: 960px;
+    --main-img-height: 960px;
 
     --thumb-width: calc(var(--main-img-width) / 10);
     --thumb-height: calc(var(--main-img-height) / 10);
@@ -197,15 +197,20 @@ body {
 	width: 100%;
 	aspect-ratio: var(--gallery-ratio);
 
-    border-radius: var(--border-radius-medium);
 	overflow: hidden;
 	background: var(--background-color);
 }
 
+.image-wrapper {
+    border-radius: var(--border-radius-medium);
+}
 
 .media-wrapper img,
 .media-wrapper video {
     border-radius: var(--border-radius-medium);
+
+    position: relative;
+    z-index: 1;
 }
 
 /* Image */
@@ -220,18 +225,52 @@ body {
 .video-wrapper {
     background-size: cover;
     background-position: center center;
+    background-repeat: no-repeat;
 }
+
+/* .video-wrapper video {
+    backdrop-filter: blur(6px);
+} */
+
+.video-wrapper::before {
+	content: "";
+	position: absolute;
+	inset: -20px;
+
+    background-image: inherit;
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+
+	filter: blur(20px);
+	transform: scale(1.1);
+
+	z-index: 0;
+}
+
+.video-wrapper::after {
+    content: "";
+    position: absolute;
+    /* inset: 0; */
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+    /* width: 100%; */
+    /* height: 100%; */
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+}
+
 
 .video-wrapper video {
-    backdrop-filter: blur(6px);
-}
-
-.product-video {
 	width: 100%;
 	height: 100%;
 	object-fit: contain;
 	display: block;
     cursor: pointer;
+
+    z-index: 2;
 }
 
 /* Loader */
@@ -278,15 +317,28 @@ body {
 /* Video interaction */
 /* Optional: paused state overlay */
 .video-wrapper.is-paused::after {
-	content: "▶";
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	font-size: 48px;
-	color: var(--text-color);
-	opacity: 0.85;
-	pointer-events: none;
+    /* content: "▶"; */
+    position: absolute;
+    top: 50%;
+    bottom: auto;
+    left: 50%;
+    right: auto;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: var(--text-color);
+    opacity: 0.85;
+    pointer-events: none;
+    z-index: 5;
+    background: transparent;
+    /* inset: auto; */
+        width: 100px;
+    height: 80px;
+    background: #fff;
+    clip-path: polygon(
+		35% 20%,
+		35% 80%,
+		75% 50%
+	);
 }
 
 /* Video fullscreen button */
